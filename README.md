@@ -28,4 +28,16 @@ Use public BigQuery dataset cms_synthetic_patient_data_omop.procedure_occurrence
 Instruction for authenticating with Google Cloud services in a docker container - https://cloud.google.com/run/docs/testing/local#docker-with-google-cloud-access
 
 # Solution
+1. Clone repository
+2. Build docker image:
+docker build -t procedure_occurrence -f Dockerfile .
+3. Run dockerfile using the following command:
+
+docker run -p 8000:8000 \ 
+   -e K_SERVICE=dev \
+   -e K_CONFIGURATION=dev \
+   -e K_REVISION=dev-00001 \
+   -e GOOGLE_APPLICATION_CREDENTIALS=[path_to_json_credentials] \
+   -v $GOOGLE_APPLICATION_CREDENTIALS:[path_to_json_credentials]:ro \
+    procedure_occurrence
 
