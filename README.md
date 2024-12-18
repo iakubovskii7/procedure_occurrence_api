@@ -37,7 +37,9 @@ docker run -p 8000:8000 \
    -e K_SERVICE=dev \
    -e K_CONFIGURATION=dev \
    -e K_REVISION=dev-00001 \
-   -e GOOGLE_APPLICATION_CREDENTIALS=[path_to_json_credentials] \
-   -v $GOOGLE_APPLICATION_CREDENTIALS:[path_to_json_credentials]:ro \
+   -e GOOGLE_APPLICATION_CREDENTIALS=/tmp/keys/[file_json_credentials].json \
+   -v $GOOGLE_APPLICATION_CREDENTIALS:/tmp/keys/[file_json_credentials].json:ro \
     procedure_occurrence
 
+
+# /Users/igor/.config/gcloud/application_default_credentials.json

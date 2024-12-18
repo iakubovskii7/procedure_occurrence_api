@@ -42,7 +42,7 @@ def get_unique_patients(client, n_days: int) -> int:
       :param n_days: integer value for last N days
       :return: integer unique patients numbers
       """
-      if not Environment.IS_PROD_ENV:
+      if Environment.IS_STAGE:
             cnt_persons_results = 12242
       else:
             query_job = client.query(create_query_for_unique_patients(n_days))
@@ -59,7 +59,7 @@ def get_providers_persons(client, procedure_type_concept_id: int) -> dict[dateti
     :return: nested dictionary; first key - date; second key - dictionary where key is providers or persons
     Example of returned dictionary: {datetime.date(2007, 11, 27): {'cnt_providers': 5, 'cnt_persons': 5}}
     """
-    if not Environment.IS_PROD_ENV:
+    if Environment.IS_STAGE:
           nested_dict = {datetime.date(2007, 11, 27): {'cnt_providers': 5, 'cnt_persons': 5}}
     else:
           query = get_query_providers_persons(procedure_type_concept_id)
