@@ -7,19 +7,22 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 # Set working directory
-WORKDIR /app
+WORKDIR /code
 
 # Copy files
-COPY . /app
+COPY ./app /code/app
+COPY poetry.lock /code/poetry.lock
+COPY pyproject.toml /code/pyproject.toml
 
 # Install dependencies
 RUN python -m pip install --upgrade pip --no-cache-dir  \
     && pip install poetry \
      && poetry config virtualenvs.create false \
-    && poetry install --no-interaction --no-ansi --no-root
+    && poetry install --without test --no-interaction --no-ansi --no-root
 
 # Expose port
 EXPOSE 8080
 
 # Run the application
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080"]
+CMD ["fastapi", "run", "app/main.py", "--host", "0.0.0.0", "--port", "8080"]
+

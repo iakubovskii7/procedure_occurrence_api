@@ -1,4 +1,4 @@
-from utils.environment import Environment
+from app.utils.environment import Environment
 
 
 class ConfigStrategy:
