@@ -15,23 +15,18 @@ def test_root(client):
     assert "REST API service" in response.json()["message"]
 
 
-def test_count_unique_persons(client, mocker):
-    mocker.patch("app.database.querries.get_unique_patients", return_value=5)
-
+def test_count_unique_persons(client):
     response = client.get("/count-unique-persons?n_days=7")
     assert response.status_code == 200
     assert response.json() == {"n_days": 7, "unique_person_count": 145118}
 
 
-def test_count_unique_persons_wrong_data(client, mocker):
-    mocker.patch("app.database.querries.get_unique_patients", return_value=-1)
-
+def test_count_unique_persons_wrong_data(client):
     response = client.get("/count-unique-persons?n_days=-1")
     assert response.status_code == 422
 
 
-def test_providers_and_persons_wrong_data(client, mocker):
-    mocker.patch("app.database.querries.get_providers_persons", return_value={})
+def test_providers_and_persons_wrong_data(client):
 
     response = client.get("/number-providers-and-persons?procedure_type=1")
     assert response.status_code == 422
