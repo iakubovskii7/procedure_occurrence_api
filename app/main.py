@@ -1,5 +1,3 @@
-from typing import Literal
-
 from fastapi import FastAPI, Query, HTTPException
 from pydantic import PositiveInt, ValidationError
 

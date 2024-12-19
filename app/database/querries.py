@@ -3,8 +3,6 @@ import datetime
 from app.config import Config
 
 table_ref = f"{Config.DB_MAIN}.{Config.SCHEME_MAIN}.{Config.TABLE_MAIN}"
-
-
 def create_query_for_unique_patients(n: int) -> str:
       """
       Create query for GBQ to get count of unique persons for the last N procedure_dat.
@@ -12,12 +10,11 @@ def create_query_for_unique_patients(n: int) -> str:
       query_unique_patients = f"""
           with n_unique_dats as (
             select distinct procedure_dat
-            from `bigquery-public-data.cms_synthetic_patient_data_omop.procedure_occurrence`
-            order by procedure_dat desc
+            from `{table_ref}`
           )
 
           select count(distinct person_id) as cnt_persons
-          from `{Config.DB_MAIN}.{Config.SCHEME_MAIN}.{Config.TABLE_MAIN}`
+          from `{table_ref}`
           inner join (select procedure_dat from n_unique_dats limit {n}) using(procedure_dat)
       """
       return query_unique_patients
@@ -28,7 +25,7 @@ def get_query_providers_persons(procedure_type_concept_id: int) -> str:
                     procedure_dat,
                     count(distinct provider_id) as cnt_providers,
                     count(distinct person_id) as cnt_persons
-            from `{Config.DB_MAIN}.{Config.SCHEME_MAIN}.{Config.TABLE_MAIN}`
+            from `{table_ref}`
             where procedure_type_concept_id = {procedure_type_concept_id}  -- 38000251, 38000269
             group by procedure_dat
             order by procedure_dat
@@ -44,7 +41,7 @@ def get_unique_patients(client, n_days: int) -> int:
       :return: integer unique patients numbers
       """
       query_job = client.query(create_query_for_unique_patients(n_days))
-      cnt_persons_results = int(query_job.to_dataframe()['cnt_persons'].values[0])
+      cnt_persons_results = int([dict(row)['cnt_persons'] for row in query_job][0])
 
       return cnt_persons_results
 
