@@ -11,6 +11,7 @@ def create_query_for_unique_patients(n: int) -> str:
           with n_unique_dats as (
             select distinct procedure_dat
             from `{table_ref}`
+            order by procedure_dat desc
           )
 
           select count(distinct person_id) as cnt_persons
